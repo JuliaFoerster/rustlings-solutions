@@ -8,8 +8,6 @@
 // need to be modified.
 // Execute `rustlings hint iterators5` or use the `hint` watch subcommand for a hint.
 
-// I AM NOT DONE
-
 use std::collections::HashMap;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -29,10 +27,24 @@ fn count_for(map: &HashMap<String, Progress>, value: Progress) -> usize {
     count
 }
 
+//map { 'ex1': Progress::None , 
+//      'ex2': Progress::Complete,
+//      'ex3': Progress::Complete,
+//      'ex4': Progress: Some
+//    }
+//
+//value = Progress::Complete
+//
+
 fn count_iterator(map: &HashMap<String, Progress>, value: Progress) -> usize {
     // map is a hashmap with String keys and Progress values.
     // map = { "variables1": Complete, "from_str": None, ... }
-    todo!();
+    // 1st solution
+    map.iter().fold(0, |acc, entry| if(&value==entry.1) {acc + 1} else {acc})
+    // 2n solution
+    // map.iter().filter(|entry| &value == entry.1).fold(0, |count, entry| count + 1)
+    // 3rd solution
+    //map.iter().fold(0, |acc, (_, progress)| if(&value==progress) {acc + 1} else {acc})
 }
 
 fn count_collection_for(collection: &[HashMap<String, Progress>], value: Progress) -> usize {
@@ -51,7 +63,12 @@ fn count_collection_iterator(collection: &[HashMap<String, Progress>], value: Pr
     // collection is a slice of hashmaps.
     // collection = [{ "variables1": Complete, "from_str": None, ... },
     //     { "variables2": Complete, ... }, ... ]
-    todo!();
+    //collection.map(|user| user)
+    
+    // 1st solution:
+    //collection.iter().map(|user| user.iter().fold(0, |acc, entry| if (&value==entry.1) {acc+1} else {acc})).sum()
+    // 2nd solution:
+    collection.iter().map( |x| count_iterator(x, value) ).sum()
 }
 
 #[cfg(test)]
