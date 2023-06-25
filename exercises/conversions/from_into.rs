@@ -3,6 +3,8 @@
 // You can read more about it at https://doc.rust-lang.org/std/convert/trait.From.html
 // Execute `rustlings hint from_into` or use the `hint` watch subcommand for a hint.
 
+// I AM NOT DONE
+
 #[derive(Debug)]
 struct Person {
     name: String,
@@ -35,20 +37,50 @@ impl Default for Person {
 // If while parsing the age, something goes wrong, then return the default of Person
 // Otherwise, then return an instantiated Person object with the results
 
-// I AM NOT DONE
-
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        match s {
+            "" | "," => Person::default(),
+            data => match data.split_once(',') {
+                Some(("", age)) => Person::default(),
+                Some((name, age)) => match (name.to_string(), age.parse::<usize>()) {
+                    (name, Ok(age)) => Person { name, age },
+                    _ => Person::default(),
+                },
+                None => Person::default(),
+            },
+        }
     }
+
+   //     if s.len() == 0{ // step 1: provided string is 0
+   //         Person::default()
+   //     }else{
+   //         let input: Vec<&str> = s.split(",").collect(); // step 2: split by coma
+   //         println!("input: {}", input[0]);
+
+   //         let x = s.split(",");
+
+   //         
+   //         //if input.len() < 2{ // step 3: missing comma, name or age
+   //           //  let person = Person::default();
+   //           //  return person;
+   //         //}
+   //         Person {
+   //             name: String::from(input[0]), // step 3: first element is name
+   //             age: String::from(input[1]).parse::<usize>().unwrap()//(Person::default()), // step 5: second element parse usize for age  
+   //         }
+
+   //     }
+   // }
 }
 
 fn main() {
     // Use the `from` function
     let p1 = Person::from("Mark,20");
     // Since From is implemented for Person, we should be able to use Into
-    let p2: Person = "Gerald,70".into();
+   // let p2: Person = "Gerald,70".into();
     println!("{:?}", p1);
-    println!("{:?}", p2);
+   // println!("{:?}", p2);
 }
 
 #[cfg(test)]
@@ -82,7 +114,6 @@ mod tests {
         assert_eq!(p.name, "John");
         assert_eq!(p.age, 30);
     }
-
     #[test]
     fn test_missing_comma_and_age() {
         let p: Person = Person::from("Mark");
