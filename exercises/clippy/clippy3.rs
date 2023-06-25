@@ -7,9 +7,6 @@ use std::mem::swap;
 fn main() {
     let my_option: Option<()> = None;
     if let Some(x) = my_option {}
-    //if my_option.is_none() {
-    //    my_option.unwrap();
-    //}
 
     let my_arr = &[
         -1, -2, -3,

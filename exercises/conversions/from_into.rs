@@ -51,27 +51,6 @@ impl From<&str> for Person {
             },
         }
     }
-
-   //     if s.len() == 0{ // step 1: provided string is 0
-   //         Person::default()
-   //     }else{
-   //         let input: Vec<&str> = s.split(",").collect(); // step 2: split by coma
-   //         println!("input: {}", input[0]);
-
-   //         let x = s.split(",");
-
-   //         
-   //         //if input.len() < 2{ // step 3: missing comma, name or age
-   //           //  let person = Person::default();
-   //           //  return person;
-   //         //}
-   //         Person {
-   //             name: String::from(input[0]), // step 3: first element is name
-   //             age: String::from(input[1]).parse::<usize>().unwrap()//(Person::default()), // step 5: second element parse usize for age  
-   //         }
-
-   //     }
-   // }
 }
 
 fn main() {
