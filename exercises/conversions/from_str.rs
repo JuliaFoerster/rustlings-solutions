@@ -28,8 +28,6 @@ enum ParsePersonError {
     ParseInt(ParseIntError),
 }
 
-// I AM NOT DONE
-
 // Steps:
 // 1. If the length of the provided string is 0, an error should be returned
 // 2. Split the given string on the commas present in it
@@ -40,14 +38,51 @@ enum ParsePersonError {
 // 6. If while extracting the name and the age something goes wrong, an error should be returned
 // If everything goes well, then return a Result of a Person object
 //
-// As an aside: `Box<dyn Error>` implements `From<&'_ str>`. This means that if you want to return a
+// As an aiside: `Box<dyn Error>` implements `From<&'_ str>`. This means that if you want to return a
 // string error message, you can do so via just using return `Err("my error message".into())`.
 
 impl FromStr for Person {
     type Err = ParsePersonError;
     fn from_str(s: &str) -> Result<Person, Self::Err> {
+        if !s.contains(",") && s.len() > 1 {
+            return Err(ParsePersonError::BadLen);
+        }
+
+        match s.split_once(',') {
+            Some(("", age)) => Err(ParsePersonError::NoName),
+            Some((name, age)) => match (name.to_string(), age.parse::<usize>()) {
+                (name, Ok(age)) => Ok(Person { name, age }),
+                (_, Err(err)) => {
+                    if age.contains(",") {
+                        Err(ParsePersonError::BadLen)
+                    } else {
+                        Err(ParsePersonError::ParseInt(err))
+                    }
+                }
+            },
+            _ => Err(ParsePersonError::Empty),
+        } 
     }
 }
+    //    match s {
+   //         "" => Err(ParsePersonError::Empty),
+   //         data => match s.split_once(',') {
+   //             // 1 solution:
+   //             //Some((name, age)) => Ok(Person { name: "John".to_string() , age: 32 }), 
+   //             // 2. solution
+   //             //Some((name, age)) => Ok(Person { name: name.to_string(), age: 32}),
+   //             //_ => Err(ParsePersonError::Empty),
+   //             // 3 solution
+   //             Some((name, age)) => match (name, age.parse::<usize>()){
+   //                 (name, Ok(age)) => Ok(Person { name:name.to_string(), age:age }),
+   //                 _ => Err(ParsePersonError::BadLen),
+   //                 //(name,"") => Err(ParsePersonError::BadLen),
+   //             }
+   //             _ => Err(ParsePersonError::Empty),
+   //         },
+   //     }
+   // }
+
 
 fn main() {
     let p = "Mark,20".parse::<Person>().unwrap();
